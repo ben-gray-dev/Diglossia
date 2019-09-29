@@ -54,6 +54,16 @@ mat-card.results {
     border-radius: 50px;
 }
 
+mat-card.diagnosis {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 95%;
+    flex: 1;
+    margin: auto;
+    margin-bottom: 7.5vh;
+}
+
 .graph {
     display: inline-block;
     width: 45%;
@@ -71,6 +81,18 @@ mat-card.results {
 }
 
 
+
+td.symptom-cell {
+    width: 50%;
+}
+
+td.mat-cell, th.mat-header-cell {
+    padding: 10px;
+}
+
+.selected {
+    background-color: #585858
+}
 
 
 

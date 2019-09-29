@@ -1,14 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TextAnalysisService, IWord, IFrequency } from '../../services/text-analysis.service';
 import { SpeechRecognitionService } from '@kamiazya/ngx-speech-recognition';
-import { MatRipple, MatTableDataSource } from '@angular/material';
-import { timer, Subscription } from 'rxjs';
+import { MatRipple, MatTableDataSource, MatChipInputEvent, MatPaginator } from '@angular/material';
+import { timer, Subscription, BehaviorSubject } from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import 'echarts';
 import 'echarts-wordcloud';
 import 'sentiment';
 import * as dateFormat from 'dateformat';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { symptomIDToName, issueData } from 'src/app/services/diagnose.service';
+import { distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-lang-complexity',
   templateUrl: './lang-complexity.component.html',
@@ -21,6 +25,13 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class LangComplexityComponent implements OnInit {
   @ViewChild(MatRipple, {static: true}) 
     ripple: MatRipple;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
+
+  symptomIDToNameTranslation = symptomIDToName;
+  issues: any[];
+
+
   doctorSpeaking: boolean;
   totalDoctorTime: number;
   totalPatientTime: number;
@@ -28,8 +39,10 @@ export class LangComplexityComponent implements OnInit {
   patientTranscript = {};
   timeElapsed: number;
   displayedColumns: string[] = ['InfrequentTerm', 'frequency', 'definition', 'pos', 'alternatives'];
+  displayedColumnsDiagnosis: string[] = ['ID', 'Name', 'SymptomList'];
   pageSizes = [10, 25, 50, 100];
-  dataSource: MatTableDataSource<any>;
+  infrequentDataSource: MatTableDataSource<any>;
+  diagnosisDataSource: MatTableDataSource<any>;
   timerSubscriber: Subscription
   screenSize = window.innerWidth;
   grammarsList;
@@ -47,6 +60,19 @@ export class LangComplexityComponent implements OnInit {
   startTime = Date.now();
   statements = [];
   statementObj = {};
+
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  ctrlGroup: FormGroup;
+  symptoms = new BehaviorSubject<string[]>([]);
+  symptoms$ = this.symptoms.asObservable();
+
+
+
 
   partOfSpeechDict = {
     'n': 'noun',
@@ -68,7 +94,7 @@ export class LangComplexityComponent implements OnInit {
     private spTxt: SpeechRecognitionService,
     private alertSnack: MatSnackBar,
     private db: AngularFirestore) { 
-    this.dataSource = new MatTableDataSource(this.infrequentWords);
+    this.infrequentDataSource = new MatTableDataSource(this.infrequentWords);
     this.wordsPerMinute = {
         legend: {},
         tooltip: {
@@ -152,6 +178,11 @@ export class LangComplexityComponent implements OnInit {
           data: []
       }]
     };
+    this.issues = Object.values(issueData);
+    this.diagnosisDataSource = new MatTableDataSource(this.issues);
+    this.ctrlGroup = new FormGroup({
+      symptoms: new FormControl([], [Validators.email, Validators.required]),
+    });
       spTxt.start();
       const source = timer(5000, 5000);
       this.timerSubscriber = source.subscribe(val => {
@@ -237,6 +268,12 @@ export class LangComplexityComponent implements OnInit {
           this.statementObj[s.resultIndex] =  {speaker: this.doctorSpeaking ? 'doctor': 'patient', text: newPhrase, action: actions.length > 0 ? actions : ''}
           this.statements = Object.values(this.statementObj);
           if (newPhrase.indexOf(' ') !== -1) {
+
+            Object.values(symptomIDToName).some(word => {
+              if (newPhrase.includes(word) && !this.symptoms.value.includes(word)) {
+                this.selectSymptom(word);
+              }
+            })
             const newWords = newPhrase.split(' ');
             newWords.map(word => {
               if (this.words[word]) {
@@ -265,12 +302,15 @@ export class LangComplexityComponent implements OnInit {
                       alternatives: this.parseMeaningLikeResult(synResul).map(word => word.word)
                     });
                   });
-                  this.dataSource.data = this.infrequentWords;
+                  this.infrequentDataSource.data = this.infrequentWords;
                 }
               });
               
             });
           } else {
+            if (Object.values(symptomIDToName).includes(newPhrase) && !this.symptoms.value.includes(newPhrase)) {
+              this.selectSymptom(newPhrase);
+            }
             this.words[newPhrase] = 1;
             this.textAnalysisService.getWordFrequency([newPhrase], this.doctorSpeaking).subscribe(r => {
               // console.log(r);
@@ -289,7 +329,7 @@ export class LangComplexityComponent implements OnInit {
                     pos: this.partOfSpeechDict[thisPos],
                     alternatives: this.parseMeaningLikeResult(synResul).map(word => word.word)
                   });
-                  this.dataSource.data = this.infrequentWords;
+                  this.infrequentDataSource.data = this.infrequentWords;
                 });
                  
               }
@@ -331,6 +371,53 @@ export class LangComplexityComponent implements OnInit {
 
     window.onresize = () => {
       this.screenSize = window.innerWidth;
+    }
+
+    this.diagnosisDataSource.paginator = this.paginator;
+
+    this.ctrlGroup.get('symptoms').valueChanges.pipe(
+      distinctUntilChanged()
+    ).subscribe(() => {
+      if (this.symptoms.value.length === 0) {
+        this.diagnosisDataSource.data = this.issues;
+      } else {
+        this.diagnosisDataSource.data = this.issues.filter(d => this.symptoms.value.some(e => d.symptomList.includes(e)));
+      }
+    });
+    
+  }
+
+  selectSymptom(symptom: string) {
+    const symCtrl = this.ctrlGroup.get('symptoms');
+    this.symptoms.next([...this.symptoms.value, symptom]);
+    symCtrl.patchValue([...symCtrl.value, symptom]);
+  }
+
+  selectSymptomClick(event): void {
+  
+  }
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    // Add symptom
+    if ((value || '').trim()) {
+      this.selectSymptom(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    
+  }
+
+  remove(symptom: string): void {
+    const index = this.symptoms.value.indexOf(symptom);
+
+    if (index >= 0) {
+      this.symptoms.value.splice(index, 1);
+      this.ctrlGroup.get('symptoms').patchValue([...this.symptoms.value]);
     }
     
   }
