@@ -98,6 +98,8 @@ THE SOFTWARE.
 
 @angular/material/core
 
+@angular/material/dialog
+
 @angular/material/divider
 
 @angular/material/form-field
@@ -107,6 +109,8 @@ THE SOFTWARE.
 @angular/material/paginator
 
 @angular/material/select
+
+@angular/material/snack-bar
 
 @angular/material/table
 

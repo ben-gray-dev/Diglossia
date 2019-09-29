@@ -8,6 +8,7 @@ import 'echarts';
 import 'echarts-wordcloud';
 import 'sentiment';
 import * as dateFormat from 'dateformat';
+import { AngularFirestore } from '@angular/fire/firestore';
 @Component({
   selector: 'app-lang-complexity',
   templateUrl: './lang-complexity.component.html',
@@ -65,7 +66,8 @@ export class LangComplexityComponent implements OnInit {
   constructor(
     private textAnalysisService: TextAnalysisService,
     private spTxt: SpeechRecognitionService,
-    private alertSnack: MatSnackBar) { 
+    private alertSnack: MatSnackBar,
+    private db: AngularFirestore) { 
     this.dataSource = new MatTableDataSource(this.infrequentWords);
     this.wordsPerMinute = {
         legend: {},
@@ -333,9 +335,29 @@ export class LangComplexityComponent implements OnInit {
     
   }
 
+  getAverageWPM(arr: number[]): number {
+    if (arr.length > 1) {
+      return arr.reduce((a,b) => a += b) / arr.length;
+    } else if (arr.length === 1) {
+      return arr[0];
+    } else {
+      return 0;
+    }
+  }
+
+
+
   finishRecording(): void {
     this.calculatePercentSpeakingTimes();
     this.finished = true;
+    this.db.collection('conversationData').add({
+      'patientTranscript': Object.values(this.patientTranscript).map(v => v['phrase']).join(' '),
+      'doctorTranscript': Object.values(this.hcpTranscript).map(v => v['phrase']).join(' '),
+      'percentDoctorSpeaking': this.totalDoctorTime / (this.totalDoctorTime + this.totalPatientTime),
+      'averageDoctorWPM': this.getAverageWPM((this.wordsPerMinute as any).dataset.source.doctor_WPM),
+      'averagePatientWPM': this.getAverageWPM((this.wordsPerMinute as any).dataset.source.patient_WPM),
+      'infrequentWords': this.infrequentWords,
+    })
     this.spTxt.stop();
   }
 
