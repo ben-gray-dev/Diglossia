@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { MatCarouselModule } from '@ngmodule/material-carousel';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { MatIconModule, MatInputModule, MatFormFieldModule, MatCardMdImage, MatCardModule, MatButtonModule, MatDividerModule, MatListModule, MatTableModule, MatPaginatorModule, MatChipsModule, MatRippleModule } from '@angular/material';
+import { MatIconModule, MatInputModule, MatFormFieldModule, MatCardMdImage, MatCardModule, MatButtonModule, MatDividerModule, MatListModule, MatTableModule, MatPaginatorModule, MatChipsModule, MatRippleModule, MatDialogModule, MatSnackBarModule } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { AngularFireModule } from '@angular/fire';
@@ -42,6 +42,8 @@ import { CovalentTooltipEchartsModule } from '@covalent/echarts/tooltip';
     BrowserAnimationsModule,
     HttpClientModule,
 
+    MatSnackBarModule,
+    MatDialogModule,
     MatCarouselModule,
     MatInputModule,
     MatCardModule,

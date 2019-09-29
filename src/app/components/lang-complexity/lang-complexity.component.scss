@@ -25,8 +25,24 @@ mat-card.textCard {
     color: #0373fc;
 }
 
+.alert {
+    color: red;
+}
+
 table {
     width: 100%;
+}
+
+.bottomDivs {
+    display: flex;
+}
+
+.filler {
+    flex: 1;
+}
+
+#pie {
+    flex: 1;
 }
 
 mat-card.results {

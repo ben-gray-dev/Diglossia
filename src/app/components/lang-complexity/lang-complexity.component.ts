@@ -3,6 +3,7 @@ import { TextAnalysisService, IWord, IFrequency } from '../../services/text-anal
 import { SpeechRecognitionService } from '@kamiazya/ngx-speech-recognition';
 import { MatRipple, MatTableDataSource } from '@angular/material';
 import { timer, Subscription } from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import 'echarts';
 import 'echarts-wordcloud';
 import 'sentiment';
@@ -54,10 +55,17 @@ export class LangComplexityComponent implements OnInit {
      'u': 'undetermined'
   }
 
+  actionMap = {
+    'opacity': 'initiating blood work processes',
+    'healing': 'ordering vaccination',
+    'create': 'drawing up prescription',
+  }
+
 
   constructor(
     private textAnalysisService: TextAnalysisService,
-    private spTxt: SpeechRecognitionService) { 
+    private spTxt: SpeechRecognitionService,
+    private alertSnack: MatSnackBar) { 
     this.dataSource = new MatTableDataSource(this.infrequentWords);
     this.wordsPerMinute = {
         legend: {},
@@ -219,6 +227,11 @@ export class LangComplexityComponent implements OnInit {
 
           }
           const actions = this.screenForActionWords(newPhrase);
+          if (actions.length > 0) {
+            this.alertSnack.open(this.actionMap[actions], 'Undo', {
+              duration: 3000
+            });
+          }
           this.statementObj[s.resultIndex] =  {speaker: this.doctorSpeaking ? 'doctor': 'patient', text: newPhrase, action: actions.length > 0 ? actions : ''}
           this.statements = Object.values(this.statementObj);
           if (newPhrase.indexOf(' ') !== -1) {
