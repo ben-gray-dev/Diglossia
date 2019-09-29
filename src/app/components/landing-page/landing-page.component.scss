@@ -1,0 +1,124 @@
+  #logoDiv {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    margin-top: 22.5vh;
+    
+  }
+  
+  .mat-focused .placeholder {
+    color: white;
+  }
+  
+  .mat-focused .underline {
+    color: white !important;
+  }
+  
+  mat-placeholder {
+    color: white !important;
+  }
+  
+  .mat-form-field-underline {
+    color: white;
+  }
+  
+  .emailForm {
+    background-color: gray;
+    width: 35vw;
+  }
+  
+  .email-form-container {
+    display: flex;
+  }
+  
+  .email-form-option {
+    flex: 1 1 auto;
+    padding: 10px;
+  }
+  
+  #emailInput {
+    width:90%;
+  }
+  
+  #submit-button {
+    height: 30%;
+    width: 8%;
+    margin: auto;
+  }
+  
+  mat-error {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-family: "Bubblegum Sans";
+  }
+  
+  form {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+  mat-toolbar, mat-card {
+    display: flex;
+    background-color: #7DE5FE;
+    a {
+      padding: 20px;
+      font-family: "Bubblegum Sans";
+    }
+  }
+  
+  span.title {
+    font-size: 30px;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
+  mat-form-field {
+    width: 20vw;
+    font-family: "Bubblegum Sans";
+  }
+  
+  #logoDiv img {
+    display: block;
+    height: auto;
+    margin: auto;
+    margin-top: -300px;
+  }
+  
+  .example-icon {
+    padding: 0 14px;
+  }
+  
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+  
+  .mat-form-field-underline {
+    background-color: white;
+  }
+  
+  .mat-form-field-empty.mat-form-field-label {
+    color: white;
+  }
+  
+  ::ng-deep .countdown {
+    width: 50% !important;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    .measurements {
+      color: white;
+      font-size: 20px;
+      font-family: 'Bubblegum Sans';
+      
+    }
+  
+    p {
+      text-align: center;
+    }
+  }

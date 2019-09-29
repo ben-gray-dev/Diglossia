@@ -1,0 +1,2 @@
+<app-no-results-verbal-diagnosis [hidden]="symptomsSpoken$ | async"></app-no-results-verbal-diagnosis>
+<app-result-table-verbal-diagnosis #ResultTable [hidden]="!(symptomsSpoken$ | async)"></app-result-table-verbal-diagnosis>

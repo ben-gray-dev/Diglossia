@@ -1,0 +1,16 @@
+<mat-toolbar>
+    <mat-toolbar-row mat-elevation-z20>
+      <button mat-button (click)="showMenu"><mat-icon>menu</mat-icon></button>
+      <span style="width: 100px"></span>
+      <span class="title">Diglossia</span>
+      <span class="spacer"></span>
+      <a href="#">Home</a>
+      <mat-divider [vertical]="true"></mat-divider>
+      <a href="/lang-complexity">Language Complexity</a>
+      <mat-divider [vertical]="true"></mat-divider>
+      <a href="/verbal-diagnosis">Verbal Diagnosis</a>
+      <mat-divider [vertical]="true"></mat-divider>
+      <a href="#">Contact us</a>
+    </mat-toolbar-row>
+  </mat-toolbar>
+<router-outlet></router-outlet>

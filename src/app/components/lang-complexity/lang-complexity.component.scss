@@ -1,0 +1,68 @@
+mat-card {
+    position: relative;
+    width: 30%;
+    height: 35vh;
+    margin: auto;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    background-color: #7DE5FE;
+    border-radius: 50px;
+}
+
+mat-card.textCard {
+    width: 60%;
+}
+
+.scrollingText {
+    font-size: 25px;
+}
+
+.docText {
+    color: green;
+}
+
+.patientText {
+    color: #0373fc;
+}
+
+table {
+    width: 100%;
+}
+
+mat-card.results {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 150vh;
+    background-color: #7DE5FE;
+    border-radius: 50px;
+}
+
+.graph {
+    display: inline-block;
+    width: 45%;
+    margin: auto;
+    flex: 1;
+}
+
+#speechIcon {
+    font-size: 150px;
+    text-align: center;
+    justify-content: center;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    margin: 0 auto;
+}
+
+h3 {
+    text-align: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.mat-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}

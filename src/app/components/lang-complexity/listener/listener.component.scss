@@ -1,0 +1,32 @@
+mat-card {
+    position: relative;
+    width: 30%;
+    height: 50vh;
+    margin: auto;
+    margin-top: 15vh;
+    margin-bottom: 7.5vh;
+    background-color: #7DE5FE;
+    border-radius: 50px;
+}
+
+#speechIcon {
+    font-size: 150px;
+    text-align: center;
+    justify-content: center;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    margin: 0 auto;
+}
+
+h3 {
+    text-align: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.mat-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}

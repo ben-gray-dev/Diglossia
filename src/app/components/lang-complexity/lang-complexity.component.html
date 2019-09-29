@@ -1,0 +1,66 @@
+<mat-card [hidden]="finished" matRipple>
+    <div class="mat-card-content">
+        <mat-icon id="speechIcon">record_voice_over</mat-icon>
+        <h3>Listening to the conversation...</h3>
+        <button mat-button (click)="finishRecording()">Finished</button>
+    </div>
+</mat-card>
+
+<mat-card class="textCard">
+    <mat-card-content [style.overflow]="'auto'" [style.height.px]="'200'">
+        <div class="scrollingText" *ngFor="let statement of statements">
+            <div [ngClass]="statement.speaker === 'doctor' ? 'docText': 'patientText'">
+                <span id="speakerTag">{{ statement.speaker }}: </span>
+                <span id="text">{{ statement.text }} </span>
+                <mat-icon *ngIf="statement.action.length !== 0" id="action">{{ statement.action }}</mat-icon>
+            </div>
+        </div>  
+    </mat-card-content> 
+</mat-card>
+
+<mat-card *ngIf="finished" class="results">
+    <div>
+        <td-chart class="graph" [style.height.px]="300" [style.width.px]="screenSize/2 - 100" [config]="histogramFrequencies" [renderer]="'svg'"></td-chart>
+        <td-chart class="graph" [style.height.px]="300" [style.width.px]="screenSize/2 - 100" [config]="wordsPerMinute" [renderer]="'svg'"></td-chart>
+    </div>
+    <div>
+        <!-- <td-chart class="graph" [style.height.px]="300" [style.width.px]="2*screenSize/3" [config]="frequencyHeatmap" [renderer]="'svg'"></td-chart> -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z20">
+            <ng-container matColumnDef="InfrequentTerm">
+                    <th mat-header-cell *matHeaderCellDef>Infrequent term</th>
+                    <td mat-cell *matCellDef="let element"> {{element.infrequentTerm}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="frequency">
+                    <th mat-header-cell *matHeaderCellDef>Frequency</th>
+                    <td mat-cell *matCellDef="let element"> {{element.frequency}} </td>
+            </ng-container>
+            <ng-container matColumnDef="definition">
+                <th mat-header-cell *matHeaderCellDef>Definition</th>
+                <td mat-cell *matCellDef="let element"> {{element.definition}} </td>
+            </ng-container>
+            <ng-container matColumnDef="pos">
+                <th mat-header-cell *matHeaderCellDef>Part of Speech</th>
+                <td mat-cell *matCellDef="let element"> {{element.pos}} </td>
+            </ng-container>
+            <ng-container matColumnDef="alternatives">
+                    <th mat-header-cell *matHeaderCellDef>Alternatives</th>
+                    <td mat-cell class="symptom-cell" *matCellDef="let element">
+                        <mat-chip-list aria-label="alternate word">
+                            <mat-chip *ngFor="let word of element.alternatives">
+                                {{ word }}
+                            </mat-chip>
+                        </mat-chip-list>
+                    </td>
+            </ng-container>
+    
+             
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <div>
+        <td-chart class="graph" [style.height.px]="300" [style.strokeWidth] = "0" [style.width.px]="screenSize/4 - 100" [config]="percentTalkingPie" [renderer]="'svg'"></td-chart>
+    </div>
+</mat-card>
+

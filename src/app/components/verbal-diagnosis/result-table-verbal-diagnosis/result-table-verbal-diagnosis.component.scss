@@ -1,0 +1,32 @@
+mat-card {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    flex: 1;
+    margin: auto;
+    margin-top: 7.5vh;
+    margin-bottom: 7.5vh;
+    background-color: #7DE5FE;
+    border-radius: 50px;
+}
+
+table, mat-form-field, mat-paginator {
+    width: 95%;
+    margin: auto;
+}
+
+th, td {
+    width: 10%;
+}
+
+td.symptom-cell {
+    width: 50%;
+}
+
+td.mat-cell, th.mat-header-cell {
+    padding: 10px;
+}
+
+.selected {
+    background-color: #585858
+}

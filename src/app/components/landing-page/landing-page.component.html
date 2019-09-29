@@ -1,0 +1,20 @@
+<div id="logoDiv" [@fadeInOut]>
+    <img width="300" alt="Angular Logo" src="../assets/diglossia-logo.svg">
+  </div>
+  <!-- <button *ngIf="!listening" (click)="listen()">Listen</button>
+  <button *ngIf="listening" (click)="listen()">Stop Listening</button> -->
+  <countdown units="Days | Hours | Minutes | Seconds"  end="September 29, 2019"></countdown>
+  <form class="form" [formGroup]="ctrlGroup">
+      <div *ngIf="emailNotSubmitted" class="email-form-container" [@fadeInOut]>
+        <mat-form-field id="emailinput" class="email-form-option">
+          <input matInput spellcheck="false" formControlName="email" autocomplete="off">
+          <mat-placeholder class="placeholder">Be the first to hear about Diglossia</mat-placeholder>
+        </mat-form-field>
+        <button id="submit-button" class="email-form-option" mat-button (click)="submitEmail()">submit</button>
+     </div>
+    
+     <div *ngIf="!emailNotSubmitted" [@fadeInOut]>
+       <span>Thank you for your interest, you have been added to our mailing list</span>
+     </div>
+  </form>
+  <mat-error *ngIf="emailAreadyUsed">Email aready in use</mat-error>

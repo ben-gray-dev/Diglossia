@@ -1,0 +1,24 @@
+mat-toolbar, mat-card {
+  display: flex;
+  background-color: #7DE5FE;
+  a {
+    padding: 20px;
+    font-family: "Bubblegum Sans";
+  }
+}
+
+span.title {
+  font-size: 30px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.mat-list-item {
+  display: inline-block;
+}
+
+mat-divider {
+  height: 100%;
+}

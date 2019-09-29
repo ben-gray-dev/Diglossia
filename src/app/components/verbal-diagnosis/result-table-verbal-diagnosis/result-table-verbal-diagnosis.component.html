@@ -1,0 +1,42 @@
+<mat-card>
+    <mat-form-field>
+        <mat-chip-list #chipList aria-label="Symptom description">
+                <mat-chip *ngFor="let symptom of symptoms.value" [selectable]="selectable"
+                            [removable]="removable" (removed)="remove(symptom)">
+                    {{symptom}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Describe your symptoms..."
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+    </mat-form-field>
+    <mat-paginator [pageSizeOptions]="pageSizes" showFirstLastButtons></mat-paginator>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z20">
+        <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef>Icd</th>
+                <td mat-cell *matCellDef="let element"> {{element.details.Icd}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let element"> {{element.details.ProfName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="SymptomList">
+                <th mat-header-cell *matHeaderCellDef>Symptom List</th>
+                <td mat-cell class="symptom-cell" *matCellDef="let element">
+                    <mat-chip-list aria-label="Symptom description">
+                        <mat-chip *ngFor="let symptom of element.symptomList" [ngClass]="symptoms.value.includes(symptom) ? 'selected' : ''" [selectable]="true" (click)="selectSymptomClick($event)">
+                            {{ symptom }}
+                        </mat-chip>
+                    </mat-chip-list>
+                </td>
+        </ng-container>
+
+         
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</mat-card>
