@@ -186,13 +186,9 @@ export class LangComplexityComponent implements OnInit {
       spTxt.start();
       const source = timer(5000, 5000);
       this.timerSubscriber = source.subscribe(val => {
-        console.log(Date.now());
         const doctorWords = Object.values(this.textAnalysisService.wordList).filter((val: any) => val.isDoctor);
         const patientWords = Object.values(this.textAnalysisService.wordList).filter((val: any) => !val.isDoctor);
-        console.log(patientWords);
         (this.wordsPerMinute as any).dataset.source.timestamp.push(dateFormat(Date.now(), "h:MM:ss TT"));
-        console.log((patientWords.length - this.wordsUntilPoint[0] )* 12);
-        console.log((doctorWords.length - this.wordsUntilPoint[0] )* 12);
 
         (this.wordsPerMinute as any).dataset.source.doctor_WPM.push((doctorWords.length - this.wordsUntilPoint[0] )* 12 );
         (this.wordsPerMinute as any).dataset.source.patient_WPM.push((patientWords.length - this.wordsUntilPoint[1] )* 12 );
@@ -201,26 +197,12 @@ export class LangComplexityComponent implements OnInit {
         
       });
 
-      spTxt.onspeechend = _ => {
-        console.log("speech end");
-      }
-
-      spTxt.onaudioend = _ => {
-        console.log('audio end');
-      }
-
-      spTxt.onsoundend = _ => {
-        console.log('sound end');
-      }
       spTxt.onresult = s => {
         this.ripple.launch({centered: true, radius: 0});
         
         const resultList: SpeechRecognitionResultList = s.results;
-        // console.log(resultList);
         if (resultList.item(s.resultIndex).item(0).confidence >= 0.8 ) {
           const newPhrase = `${resultList.item(s.resultIndex).item(0).transcript}`.toLowerCase().trim();
-          console.log(newPhrase);
-          console.log(s.resultIndex);
           if (s.resultIndex % 2 !== 1) {
             this.doctorSpeaking = true;
             if (s.resultIndex > 0) {
@@ -240,8 +222,6 @@ export class LangComplexityComponent implements OnInit {
               phrase: newPhrase,
               time: Date.now() - this.startTime,
             };
-            console.log(`new doctor transcript:`);
-            console.log(this.hcpTranscript);
           } else {
             this.doctorSpeaking = false;
             if (this.hcpTranscript[s.resultIndex - 1]) {
@@ -255,8 +235,6 @@ export class LangComplexityComponent implements OnInit {
                 time: Date.now() - this.startTime,
               };
             }
-            console.log('new patient transcript:');
-            console.log(this.patientTranscript);
 
           }
           const actions = this.screenForActionWords(newPhrase);
@@ -283,7 +261,6 @@ export class LangComplexityComponent implements OnInit {
               }
             })
             this.textAnalysisService.getWordFrequency(newPhrase.split(' '), this.doctorSpeaking).subscribe(r => {
-              // console.log(r);
               r.map((_, i) => {
                 const wordResult = r[i][0]['word'];
                 const freq = Number(r[i][0]['tags'][0].substr(2, r[i][0]['tags'][0].length - 1));
@@ -292,7 +269,6 @@ export class LangComplexityComponent implements OnInit {
                   const nlpData = r[i][0]['defs'][0].split('\t');
                   const thisPos = nlpData[0];
                   const def = nlpData[1];
-                  // console.log(def);
                   this.textAnalysisService.getSimplerWord(wordResult).subscribe(synResul => {
                     this.infrequentWords.push({
                       infrequentTerm: wordResult,
@@ -313,7 +289,6 @@ export class LangComplexityComponent implements OnInit {
             }
             this.words[newPhrase] = 1;
             this.textAnalysisService.getWordFrequency([newPhrase], this.doctorSpeaking).subscribe(r => {
-              // console.log(r);
               const freq =  Number(r[0][0]['tags'][0].substr(2, r[0][0]['tags'][0].length - 1));
               const currentWord = r[0][0]['word'];
               const nlpData = r[0][0]['defs'][0].split('\t');
@@ -359,7 +334,6 @@ export class LangComplexityComponent implements OnInit {
     
   
       spTxt.onend = _ => {
-        console.log('ended here');
         if (!this.finished) {
           spTxt.start();
         }
@@ -453,7 +427,6 @@ export class LangComplexityComponent implements OnInit {
     
     // result.sort((a, b) => Number(b['tags'][b['tags'].length - 1].split(':')[1]) - Number(a['tags'][a['tags'].length - 1].split(':')[1]));
     result.sort((a,b) => b.score - a.score);
-    console.log(result);
     const topFive = result.slice(0, 5);
     topFive.sort((a, b) => Number(b['tags'][b['tags'].length - 1].split(':')[1]) - Number(a['tags'][a['tags'].length - 1].split(':')[1]));
     return topFive;

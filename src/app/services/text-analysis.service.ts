@@ -44,7 +44,6 @@ export class TextAnalysisService {
     }
     
     this.wordList[wordToAdd] = {text: wordToAdd, frequency: 1, sentiment: this.sAn.analyze(wordToAdd).score, isDoctor: isDoctor};
-    console.log(this.wordList);
     return false;
   }
 
