@@ -22,11 +22,11 @@
 <mat-card *ngIf="finished" class="results">
     <div>
         <td-chart class="graph" [style.height.px]="300" [style.width.px]="screenSize/2 - 100" [config]="histogramFrequencies" [renderer]="'svg'"></td-chart>
-        <td-chart class="graph" [style.height.px]="300" [style.width.px]="screenSize/2 - 100" [config]="wordsPerMinute" [renderer]="'svg'"></td-chart>
+        <td-chart id="pie" class="graph" [style.height.px]="300" [style.strokeWidth] = "0" [style.width.px]="screenSize/2 - 65" [config]="percentTalkingPie" [renderer]="'svg'"></td-chart>
+
     </div>
     <div class="bottomDivs">
-        <span class="filler"></span>
-        <td-chart id="pie" class="graph" [style.height.px]="300" [style.strokeWidth] = "0" [style.width.px]="screenSize/4 - 100" [config]="percentTalkingPie" [renderer]="'svg'"></td-chart>
+        <td-chart class="graph-full" [style.height.px]="300" [style.width.px]="screenSize - 100" [config]="wordsPerMinute" [renderer]="'svg'"></td-chart>
     </div>
     <div *ngIf="infrequentDataSource.data.length > 0">
             <!-- <td-chart class="graph" [style.height.px]="300" [style.width.px]="2*screenSize/3" [config]="frequencyHeatmap" [renderer]="'svg'"></td-chart> -->

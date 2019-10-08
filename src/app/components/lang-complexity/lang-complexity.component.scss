@@ -49,7 +49,7 @@ mat-card.results {
     display: flex;
     flex-direction: column;
     width: 95%;
-    height: 150vh;
+    height: auto;
     background-color: #7DE5FE;
     border-radius: 50px;
 }
@@ -67,6 +67,13 @@ mat-card.diagnosis {
 .graph {
     display: inline-block;
     width: 45%;
+    margin: auto;
+    flex: 1;
+}
+
+.graph-full {
+    display: inline-block;
+    width: 95%;
     margin: auto;
     flex: 1;
 }
